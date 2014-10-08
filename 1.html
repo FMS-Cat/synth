@@ -31,7 +31,7 @@
 				padding: 8px;
 				margin: 8px;
 				width: 640px;
-				height: 320px;
+				height: 240px;
 				background-color: #222222;
 			}
 
@@ -42,7 +42,7 @@
 				right: 0px;
 				padding: 8px;
 				margin: 8px;
-				height: 320px;
+				height: 240px;
 				color: #FFFFFF;
 				background-color: #222222;
 				overflow: hidden;
@@ -132,7 +132,7 @@ JS自体今まであまり触ったことがないので、僕自身も勉強に
 なんか、自分自身オシレータを再認識できたような気がする。良いね。
 		</div>
 
-		<div style="position:fixed;bottom:0px;left:0px;margin:0px;padding:0px;width:100%;height:352px;background-color:#FFFFFF;">
+		<div style="position:fixed;bottom:0px;left:0px;margin:0px;padding:0px;width:100%;height:272px;background-color:#FFFFFF;">
 			<div id="synth">
 				<img src="./img/saw1.svg" id="oscSaw" onClick="changeOsc(0)" width="48" height="48"><br>
 				<img src="./img/squ.svg" id="oscSqu" onClick="changeOsc(1)" width="48" height="48"><br>
@@ -152,7 +152,7 @@ JS自体今まであまり触ったことがないので、僕自身も勉強に
 			function resize()
 			{
 				document.getElementById("article").style.width=""+(window.innerWidth-32)+"px";
-				document.getElementById("article").style.height=""+(window.innerHeight-352-32)+"px";
+				document.getElementById("article").style.height=""+(window.innerHeight-272-32)+"px";
 				if(window.innerWidth-640-32-24<16)
 				{
 					document.getElementById("console").style.visibility="hidden";
@@ -174,7 +174,7 @@ JS自体今まであまり触ったことがないので、僕自身も勉強に
 				var temp=document.getElementById("console").innerHTML;
 				conRow++;
 				console.log(conRow);
-				if(17<conRow)
+				if(12<conRow)
 				{
 					conRow--;
 					document.getElementById("console").innerHTML=temp.slice(temp.indexOf("<br>")+4);
@@ -211,7 +211,7 @@ JS自体今まであまり触ったことがないので、僕自身も勉強に
 				{
 					synth.noteOff(note,64);
 					isOn[note]=false;
-					con("note off: "+note,"#FFFFFF");
+					con("note off: "+note,"#BBBBBB");
 				}
 			}
 
