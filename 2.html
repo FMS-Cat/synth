@@ -61,17 +61,17 @@
 			<div id="synth">
 				<div style="position:absolute;left:58px;top:20px;width:540px;height:120px">
 					<svg viewBox="0 0 540 120" width="540" height="120">
-						<path stroke="#FFFFFF" id="envGraph" stroke-width="2" fill="#666666" d="M 0 110 l 180 -110 l 180 0 l 180 110 M 0 110 z"/>
-						<path stroke="#FF0066" id="envGraphA" stroke-width="4" d="M 0 115 h 180"/>
-						<path stroke="#00FF66" id="envGraphD" stroke-width="4" d="M 0 115 m 180 0 h 180"/>
-						<path stroke="#0066FF" id="envGraphR" stroke-width="4" d="M 0 115 m 180 0 m 180 0 h 180"/>
+						<path stroke="#FFFFFF" id="envGraph" stroke-width="2" fill="#666666" d=""/>
+						<path stroke="#FF0066" id="envGraphA" stroke-width="4" d=""/>
+						<path stroke="#00FF66" id="envGraphD" stroke-width="4" d=""/>
+						<path stroke="#0066FF" id="envGraphR" stroke-width="4" d=""/>
 					</svg>
 				</div>
 				<div style="position:absolute;left:8px;top:150px">
-					<div style="position:absolute;left:60px;"><input type="text" value="0" id="envA"></div>
-					<div style="position:absolute;left:200px;"><input type="text" value="1" id="envD"></div>
-					<div style="position:absolute;left:340px;"><input type="text" value="1" id="envS"></div>
-					<div style="position:absolute;left:480px;"><input type="text" value="0" id="envR"></div>
+					<div style="position:absolute;left:60px;"><input type="text" value=".2" id="envA"></div>
+					<div style="position:absolute;left:200px;"><input type="text" value=".4" id="envD"></div>
+					<div style="position:absolute;left:340px;"><input type="text" value=".6" id="envS"></div>
+					<div style="position:absolute;left:480px;"><input type="text" value=".3" id="envR"></div>
 				</div>
 			</div>
 			<div id="console" style="width: 0px;visibility:visible;">
@@ -150,7 +150,7 @@
 				}
 			}
 
-			var envA=0.0,envD=1.0,envS=1.0,envR=0.0;
+			var envA=0.2,envD=0.4,envS=0.6,envR=0.3;
 
 			function changeEnvGraph()
 			{
@@ -160,14 +160,14 @@
 				document.getElementById("envGraphR").setAttribute("d","M 0 115 m "+envA*180+" 0 m "+envD*180+" 0 h "+envR*180+"");
 			}
 
-			changeEnvGraph();
-
 			function changeEnv()
 			{
 				var _table=[0.,[1.,envA*1000.],[envS,envD*1000.],[0.,envR*1000.]];
 				synth.env=T("env",{table:_table,releaseNode:3});
 				changeEnvGraph();
 			}
+
+			changeEnv();
 
 			function round2(num,dec)
 			{
