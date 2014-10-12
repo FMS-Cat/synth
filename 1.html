@@ -4,49 +4,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>FMS_Cat - ツマミ怖くないっ！シンセ講座 第一回 オシレータ ( Saw, Square, Triangle, Sine )</title>
-   		<link rel="stylesheet" href="./github-markdown.css">
+   		<link rel="stylesheet" href="./css/github-markdown.css">
+		<link rel="stylesheet" href="./css/style.css">
 		<style type="text/css">
-			body
-			{
-				font-family: 'Helvetica Neue' , Helvetica , Arial , Verdana;
-				background-color: #FFFFFF;
-			}
-
-			#article
-			{
-				position: fixed;
-				top: 0px;
-				left: 0px;
-				padding: 16px;
-				margin: 0px;
-				overflow-x: hidden;
-				overflow-y: scroll;
-			}
-
-			#synth
-			{
-				position: fixed;
-				bottom: 0px;
-				left: 0px;
-				padding: 8px;
-				margin: 8px;
-				width: 640px;
-				height: 240px;
-				background-color: #222222;
-			}
-
-			#console
-			{
-				position: fixed;
-				bottom: 0px;
-				right: 0px;
-				padding: 8px;
-				margin: 8px;
-				height: 240px;
-				color: #FFFFFF;
-				background-color: #222222;
-				overflow: hidden;
-			}
 		</style>
 	</head>
 	<body>
@@ -128,41 +88,8 @@
 		<script src="./js/marked.js"></script>
 		<script src="./js/timbre.js" type="text/javascript"></script>
 		<script src="./js/k2n.js" type="text/javascript"></script>
+		<script src="./js/style.js" type="text/javascript"></script>
 		<script>
-			document.getElementById("article").innerHTML=marked(document.getElementById("article").innerHTML);
-
-			function resize()
-			{
-				document.getElementById("article").style.width=""+(window.innerWidth)*.8+"px";
-				document.getElementById("article").style.padding="16px "+(window.innerWidth)*.1+"px";
-				document.getElementById("article").style.height=""+(window.innerHeight-272-32)+"px";
-				if(window.innerWidth-640-32-24<16)
-				{
-					document.getElementById("console").style.visibility="hidden";
-				}
-				else
-				{
-					document.getElementById("console").style.visibility="visible";
-					document.getElementById("console").style.width=""+(window.innerWidth-640-32-24)+"px";
-				}
-			}
-			resize();
-			window.onresize=resize;
-
-			var conRow=0;
-			function con(str,clr)
-			{
-				var temp=document.getElementById("console").innerHTML;
-				document.getElementById("console").innerHTML=temp+"<span style=\"color:"+clr+";\">"+str+"</span><br>";
-				var temp=document.getElementById("console").innerHTML;
-				conRow++;
-				if(13<conRow)
-				{
-					conRow--;
-					document.getElementById("console").innerHTML=temp.slice(temp.indexOf("<br>")+4);
-				}
-			}
-
 			var osc,env;
 			var osc=T("saw");
 			var env=T("adsr",{a:10,d:10,s:1.,r:10});

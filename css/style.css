@@ -1,0 +1,41 @@
+body
+{
+  font-family: 'Helvetica Neue' , Helvetica , Arial , Verdana;
+  background-color: #FFFFFF;
+}
+
+#article
+{
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  padding: 16px;
+  margin: 0px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+#synth
+{
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  padding: 8px;
+  margin: 8px;
+  width: 640px;
+  height: 240px;
+  background-color: #222222;
+}
+
+#console
+{
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  padding: 8px;
+  margin: 8px;
+  height: 240px;
+  color: #FFFFFF;
+  background-color: #222222;
+  overflow: hidden;
+}
