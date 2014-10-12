@@ -1,3 +1,4 @@
+console.log(marked(document.getElementById("article").innerHTML));
 document.getElementById("article").innerHTML=marked(document.getElementById("article").innerHTML);
 
 function resize()

@@ -7,25 +7,123 @@
    		<link rel="stylesheet" href="./css/github-markdown.css">
 		<link rel="stylesheet" href="./css/style.css">
 		<style type="text/css">
+			strong
+			{
+				background: #FFFF00;
+			}
+
+			.preset
+			{
+				font-size: 24px;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="article" class="markdown-body" style="width:640px;height:320px;">
-#ツマミ怖くないっ！シンセ講座
+#[ツマミ怖くないっ！シンセ講座](http://fms-cat.github.io/synth/)
 
 ##第二回 エンベロープ <span style="font-size:16px;">( Amp, ADSR )</span>
 
-文章をかいているよ
+今回から、[前回](./1.html)紹介したオシレータから出る音に少しずつ表情をつけていこうと思います。  
+まずは、 **エンベロープ** というものを紹介します。  
+今回からついに**ツマミ**が登場しますが、怖がらないでください！たった4つですよ！  
+また、今回ベースとするオシレータはノコギリ波 <img src="./img/saw.svg" width="16" height="16"> とします。
+
+エンベロープは、**音に時間的変化を与える**もので、**ノートオン**のタイミングと**ノートオフ**のタイミングが強く関係します。  
+ノートオンとノートオフは、それぞれ**キーボードを押した瞬間**と**キーボードを離した瞬間**を指す言葉です。  
+キーボードで演奏しながら、シンセのパネルの右側のコンソールログを見ていただければわかると思います。
+
+エンベロープには種類がたくさんあるのですが、今回紹介するのは最も一般的な **ADSR** と呼ばれるものです。  
+ADSRという名前は、**<span style="color:#FF0066">Attack</span>**、**<span style="color:#00DD66">Decay</span>**、**Sustain**、**<span style="color:#0066FF">Release</span>**という、4つのパラメータの頭文字からとられています。  
+エンベロープは**音量(Amp)**、**音程(Pitch)**、**フィルター(Filter)**に割り当てられることが多いです。  
+**今回は音量に割り当てています。**
+
+シンセパネルの4つのツマミの上にあるものが、エンベロープのグラフです。  
+ノートオンのタイミングで、グラフの一番左から<span style="color:#FF0066">赤</span>と<span style="color:#00DD66">緑</span>の部分を右へ流れていくように音量が変わるのがわかると思います。  
+音量の変化は<span style="color:#00DD66">緑</span>と<span style="color:#0066FF">青</span>の中間で一時停止し、一定の音量となります。  
+ノートオフのタイミングで<span style="color:#0066FF">青</span>の左端から右へ流れていくように音量が変わります。
+
+それでは、実際にエンベロープを弄ってみましょう。
+
+---
+
+- ### <span style="color:#FF0066">Attack</span>
+<span style="color:#FF0066">赤</span>のツマミは**<span style="color:#FF0066">Attack</span>**です。Aと略されます。  
+Attackはノートオンから**音量が最大になるまでの時間**を決めるツマミです。  
+長くすればするほど音の立ち上がりが柔らかくなります。  
+ピアノなどの音は短めに、バイオリンなどの音は長めに設定するとそれっぽくなります。
+
+- ### <span style="color:#00DD66">Decay</span> / Sustain
+<span style="color:#00DD66">緑</span>のツマミは**<span style="color:#00DD66">Decay</span>**、白のツマミは**<span style="color:#000000">Sustain</span>**です。それぞれ、D、Sと略されます。  
+DecayとSustainはセットになっていて、音量がAttackによって**最大になった後の音量の変わり方**を変化させます。  
+Decayで、Sustainで指定する音量まで音量が下がるまでの時間を指定します。  
+Sustainのみ、他の3つのパラメータと違って、**時間ではなく音量**を指定するパラメータです。
+説明が難しいので、実際にツマミを動かして、グラフを見ながら理解してください。  
+先ほど説明したように、<span style="color:#00DD66">緑</span>と<span style="color:#0066FF">青</span>の中間で音量変化が一時停止することを忘れずに！  
+**使うのが比較的難しい**ので、他2つのツマミに慣れないうちは、Sは最大、Dは任意でいいと思います。
+
+- ### <span style="color:#0066FF">Release</span>
+<span style="color:#0066FF">青</span>のツマミは**<span style="color:#0066FF">Release</span>**です。Rと略されます。  
+Releaseはノートオフから**音が消えるまでの時間**を決めるツマミです。  
+長くすればするほどしっぽが長くなり、残響の残る音になります。  
+ギターや鉄琴などの音は長めに設定するといいかも。
+
+---
+
+### プリセット
+
+**プリセット**とは、シンセの**パラメータを保存したもの**です。プログラムとも呼ばれます。  
+ということで、以下に今回のシンセを用いたプリセットを幾つか用意しました。
+
+- <a class="preset" onclick="preset(0.,1.,1.,0.)">Lesson 1</a>  
+`a=0.0 , d=1.0 , s=1.0 , r=0.0`  
+[前回](./1.html)と全く同じ状態の音ですね。AttackとReleaseが0だと、こういったキレの良い音になります。
+
+- <a class="preset" onclick="preset(.2,.4,.6,.3)">Lesson 2 init</a>  
+`a=0.2 , d=0.4 , s=0.6 , r=0.3`  
+今回の初期状態です。
+
+- <a class="preset" onclick="preset(.4,1.,1.,.8)">Pad</a>  
+`a=0.4 , d=1.0 , s=1.0 , r=0.8`  
+AttackとReleaseのみで作った音です。パッドと呼ばれる、あまりそれ自体が強調されない背景音です。目立つ楽器と組み合わせて、和音で使うことが多いですね。
+
+- <a class="preset" onclick="preset(.02,1.,.0,.1)">Piano</a>  
+`a=0.02 , d=1.0 , s=0.0 , r=0.1`  
+ピアノは押しっぱなしにすると音が減衰していき、最終的に音が無くなりますよね。それをエンベロープで再現するには、Sustainを0にすればよいです。
+
+- <a class="preset" onclick="preset(.0,.07,.0,.0)">Pluck</a>  
+`a=0.0 , d=0.07 , s=0.0 , r=0.0`  
+Pianoと似た音ですが、Dをとても早くしています。弾くような音ですね。スクエア波で作ったPluckは、シンセサイザーを用いて作られた有名な楽曲の曲名を用いてしばしば「Popcorn」と呼ばれています。
+<iframe width="560" height="315" src="//www.youtube.com/embed/NjxNnqTcHhg" frameborder="0" allowfullscreen></iframe>
+
+- <a class="preset" onclick="preset(.0,.2,.3,.1)">E-Piano</a>  
+`a=0.02, d=0.2 , s=0.3 , r=0.1`  
+Pluckに似ていますが、Sustainを0でなくすると、音の出だしの強調されたエレクトリックピアノのような音になります。
+
+他にもいろいろな音が作れるので、ぜひいろいろ試してみてください。
+
+---
+
+ということで、今回はエンベロープを紹介しました。  
+実際、音量を変化的に操る手段としてもっともよく使われるものはエンベロープですので、これさえマスターしてしまえば音量についてはほぼ大丈夫です。  
+しかし、まだまだ調理が足りませんね。これからもいろいろな調理方法を紹介していきます。
+次回は「フィルター ( Filter, LPF )」の予定です。
 		</div>
 		<div style="position:fixed;bottom:0px;left:0px;margin:0px;padding:0px;width:100%;height:272px;background-color:#FFFFFF;">
 			<div id="synth">
-				<div style="position:absolute;left:58px;top:20px;width:540px;height:120px">
-					<svg viewBox="0 0 540 120" width="540" height="120">
+				<div style="position:absolute;left:48px;top:20px;width:540px;height:120px">
+					<svg viewBox="0 0 560 120" width="560" height="120">
 						<path stroke="#FFFFFF" id="envGraph" stroke-width="2" fill="#666666" d=""/>
 						<path stroke="#FF0066" id="envGraphA" stroke-width="4" d=""/>
 						<path stroke="#00FF66" id="envGraphD" stroke-width="4" d=""/>
 						<path stroke="#0066FF" id="envGraphR" stroke-width="4" d=""/>
 					</svg>
+				</div>
+				<div style="position:absolute;left:5px;top:150px">
+					<div style="position:absolute;left:60px;color:#FF0066;">A</div>
+					<div style="position:absolute;left:200px;color:#00FF66;">D</div>
+					<div style="position:absolute;left:340px;color:#FFFFFF;">S</div>
+					<div style="position:absolute;left:480px;color:#0066FF;">R</div>
 				</div>
 				<div style="position:absolute;left:8px;top:150px">
 					<div style="position:absolute;left:60px;"><input type="text" value=".2" id="envA"></div>
@@ -84,10 +182,10 @@
 
 			function changeEnvGraph()
 			{
-				document.getElementById("envGraph").setAttribute("d","M 0 110 l "+envA*180+" -110 l "+envD*180+" "+(1-envS)*110+" l "+envR*180+" "+envS*110+" M 0 110 z");
-				document.getElementById("envGraphA").setAttribute("d","M 0 115 h "+envA*180+"");
-				document.getElementById("envGraphD").setAttribute("d","M 0 115 m "+envA*180+" 0 h "+envD*180+"");
-				document.getElementById("envGraphR").setAttribute("d","M 0 115 m "+envA*180+" 0 m "+envD*180+" 0 h "+envR*180+"");
+				document.getElementById("envGraph").setAttribute("d","M 10 110 l "+envA*180+" -110 l "+envD*180+" "+(1-envS)*110+" l "+envR*180+" "+envS*110+" M 10 110 z");
+				document.getElementById("envGraphA").setAttribute("d","M 10 115 h "+envA*180+"");
+				document.getElementById("envGraphD").setAttribute("d","M 10 115 m "+envA*180+" 0 h "+envD*180+"");
+				document.getElementById("envGraphR").setAttribute("d","M 10 115 m "+envA*180+" 0 m "+envD*180+" 0 h "+envR*180+"");
 			}
 
 			function changeEnv()
@@ -98,6 +196,19 @@
 			}
 
 			changeEnv();
+
+			function preset(a,d,s,r)
+			{
+				envA=a;
+				envD=d;
+				envS=s;
+				envR=r;
+				$("#envA").val(a).trigger("change");
+				$("#envD").val(d).trigger("change");
+				$("#envS").val(s).trigger("change");
+				$("#envR").val(r).trigger("change");
+				changeEnv();
+			}
 
 			function round2(num,dec)
 			{
