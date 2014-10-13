@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>FMS_Cat - ツマミ怖くないっ！シンセ講座 第3回 フィルター ( Filter, Cutoff, Resonance, LPF )</title>
+   		<link rel="stylesheet" href="./css/github-markdown.css">
+		<link rel="stylesheet" href="./css/style.css">
+		<style type="text/css">
+			strong
+			{
+				background: #FFFF00;
+			}
+
+			.preset
+			{
+				font-size: 24px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="article" class="markdown-body" style="width:640px;height:320px;">
+#[ツマミ怖くないっ！シンセ講座](http://fms-cat.github.io/synth/)
+
+##第3回 フィルター <span style="font-size:16px;">( Filter, Cutoff, Resonance, LPF )</span>
+
+第3回となる今回は**フィルター**です！張り切って行きましょう！
+
+フィルターは、音の信号から、**特定の周波数成分を除去**する装置です。  
+もしかしたら、高校の物理の授業で習った人もいるかも…？(実世界ではコンデンサと抵抗を用いて簡単に実装できるみたいです)  
+元々はノイズ除去などに使われていた装置ですが、それをシンセサイザーの音作りに転用してしまったのですね。変態ですね。
+
+シンセでよく使われるフィルターには、**LPF**、**HPF**、**BPF** などといった種類があります。  
+**最もシンセで用いられるフィルターはLPF**です。今回もLPFを使いますよ。  
+LPFは **Low Pass Filter** の略で、高周波域を削り、**低周波域を通す**フィルターです。
+
+---
+
+今回は **<span style="color:#00DD66">Cutoff</span>**、**<span style="color:#FF0066">Resonance</span>** という2つのツマミを用意しました。  
+- <span style="color:#00DD66">Cutoff</span>  
+シンセによっては、 Frequency という名前のパラメータだったり。  
+**削り始める周波数を指定**します。この周波数より上の周波数の音はカットされます。
+- <span style="color:#FF0066">Resonance</span>  
+Resonanceは、共鳴という意味ですね。シンセによっては、 Q, Peak という名前のパラメータだったり。  
+**Cutoffで指定した周波数を強調**します。上げれば上げるほどクセの強い音になります。  
+このシンセだと、Resonanceを上げ過ぎるとさすがに癖が強すぎるので注意。
+
+意味がわからない…？はい、**理解する必要はありません**。シンセにおける**フィルターはフィーリング**です！  
+**シンセによってフィルターの特性も大きく変化してくる**ので、細かく周波数などを覚える必要はありませんよ。  
+シンセによっては、一つのシンセに何種類もLPFを用意しているものもあります。わあ。  
+一応、ツマミの上に、フィルターによって周波数帯がどのように削られているかを示すグラフを表示していますが、不正確のためあまりアテにしないでください。
+
+以前、大学の先生が「シンセサイザーを見たらとりあえずCutoffを弄れ」と言っていました。  
+本当にその通りで、**シンセサイザーで最も音が特徴的に変化するツマミはCutoff**です。  
+シンセサイザーは、Resonanceを自分の好きな位置に合わせてCutoffをグリグリ弄るだけでほんとうに楽しいです。  
+ちなみに、今自分の中ではレゾナンスは弱めがアツいです。
+
+---
+
+フィルターは、前回紹介したエンベロープや、次回紹介する「LFO」と組み合わせることによりその力を発揮します。  
+ツマミで弄るのも楽しいですが、時間変化するフィルターはもっと楽しいですよ！  
+ということで、次回は「ビブラート ( LFO )」です。
+
+オマケ : フィルターを使うゲーム。  
+<iframe width="420" height="315" src="//www.youtube.com/embed/6SvaW-yljiI" frameborder="0" allowfullscreen></iframe>
+		</div>
+		<div style="position:fixed;bottom:0px;left:0px;margin:0px;padding:0px;width:100%;height:272px;background-color:#FFFFFF;">
+			<div id="synth">
+				<div style="position:absolute;left:58px;top:0px;width:540px;height:120px">
+					<svg viewBox="0 0 540 120" width="540" height="120">
+						<path stroke="#FFFFFF" id="lpfGraph" stroke-width="2" fill="#666666" d="M 0 0"/>
+					</svg>
+				</div>
+				<div style="position:absolute;left:8px;top:220px">
+					<div style="position:absolute;left:200px;color:#00FF66;width:96px;" align="center">Cut</div>
+					<div style="position:absolute;left:340px;color:#FF0066;width:96px;" align="center">Res</div>
+				</div>
+				<div style="position:absolute;left:8px;top:140px">
+					<div style="position:absolute;left:200px;"><input type="text" value="1." id="lpfC"></div>
+					<div style="position:absolute;left:340px;"><input type="text" value=".0" id="lpfR"></div>
+				</div>
+			</div>
+			<div id="console" style="width: 0px;visibility:visible;">
+			</div>
+		</div>
+
+		<script src="./js/marked.js"></script>
+		<script src="./js/timbre.js" type="text/javascript"></script>
+		<script src="./js/jquery.js" type="text/javascript"></script>
+		<script src="./js/jquery.knob.js" type="text/javascript"></script>
+		<script src="./js/k2n.js" type="text/javascript"></script>
+		<script src="./js/style.js" type="text/javascript"></script>
+
+		<script>
+
+			var synth = T("SynthDef").play();
+			var lpfC = T("param", {value:20000});
+			var lpfR = T("param", {value:0});
+
+			synth.def = function(opts)
+			{
+				var osc = T("saw", {freq:opts.freq,mul:0.25});
+				var lpf = T("lpf", {cutoff:lpfC, Q:lpfR}, osc);
+				var env = T("env", {table:[1.,0.],releaseNode:1}, lpf);
+				return env.on("ended", opts.doneAction).bang();
+			};
+
+			var isOn=[];
+			for(var c=0;c<80;c++)
+			{
+				isOn.push(false);
+			}
+
+			document.onkeydown=function()
+			{
+				var note=k2n(window.event.keyCode);
+				if(note!==0&&!(isOn[note]))
+				{
+					synth.noteOn(note,64);
+					isOn[note]=true;
+					con("note on: "+note,"#FFFFFF");
+				}
+			}
+
+			document.onkeyup=function()
+			{
+				var note=k2n(window.event.keyCode);
+				if(note!==0&&isOn[note])
+				{
+					synth.noteOff(note,64);
+					isOn[note]=false;
+					con("note off: "+note,"#BBBBBB");
+				}
+			}
+
+			function changeLpfGraph()
+			{
+				document.getElementById("lpfGraph").setAttribute("d","M -20 60 h "+T(lpfC.value)/20000.*480.+" c 40 0 40 "+T(lpfR.value)/40.*-300+" 70 70 L -20 130 L -20 60 z");
+			}
+
+			function changeLpf(target,param)
+			{
+				switch(target)
+				{
+					case 0: lpfC.value=(10+Math.pow(param,2.)*(20000-10));break;
+					case 1: lpfR.value=(param*40);break;
+				}
+				changeLpfGraph();
+			}
+
+			changeLpfGraph();
+
+			function round2(num,dec)
+			{
+				num*=Math.pow(10,dec);
+				num=Math.round(num);
+				return num/Math.pow(10,dec);
+			}
+
+			function releaseLpf(num)
+			{
+				switch(num)
+				{
+					case 0: con("lpf cutoff: "+round2(lpfC.value,0)+" Hz","#00FF66");break;
+					case 1: con("lpf resonance: "+round2(lpfR.value/40.,2),"#00FF66");break;
+				}
+			}
+
+			$(function()
+			{
+				var knobTemp={"min":0,"max":1,"step":.001,"thickness":.6,"angleOffset":-150,"angleArc":300,"width":96,"displayInput":false,"bgColor":"#333333"};
+				$("#lpfC").knob($.extend(true,{"fgColor":"#00FF66","change":function(v){changeLpf(0,v);},"release":function(){releaseLpf(0);}},knobTemp));
+				$("#lpfR").knob($.extend(true,{"fgColor":"#FF0066","change":function(v){changeLpf(1,v);},"release":function(){releaseLpf(1);}},knobTemp));
+			});
+		</script>
+	</body>
+</html>
