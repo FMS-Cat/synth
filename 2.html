@@ -40,7 +40,7 @@ ADSRという名前は、**<span style="color:#FF0066">Attack</span>**、**<span
 
 シンセパネルの4つのツマミの上にあるものが、エンベロープのグラフです。  
 ノートオンのタイミングで、グラフの一番左から<span style="color:#FF0066">赤</span>と<span style="color:#00DD66">緑</span>の部分を右へ流れていくように音量が変わるのがわかると思います。  
-音量の変化は<span style="color:#00DD66">緑</span>と<span style="color:#0066FF">青</span>の中間で一時停止し、一定の音量となります。  
+音量の変化は点線の部分で一時停止し、一定の音量となります。  
 ノートオフのタイミングで<span style="color:#0066FF">青</span>の左端から右へ流れていくように音量が変わります。
 
 それでは、実際にエンベロープを弄ってみましょう。
@@ -59,7 +59,7 @@ DecayとSustainはセットになっていて、音量がAttackによって**最
 Decayで、Sustainで指定する音量まで音量が下がるまでの時間を指定します。  
 Sustainのみ、他の3つのパラメータと違って、**時間ではなく音量**を指定するパラメータです。  
 説明が難しいので、実際にツマミを動かして、グラフを見ながら理解してください。  
-先ほど説明したように、<span style="color:#00DD66">緑</span>と<span style="color:#0066FF">青</span>の中間で音量変化が一時停止することを忘れずに！  
+先ほど説明したように、点線の部分で音量変化が一時停止することを忘れずに！  
 **使うのが比較的難しい**ので、他2つのツマミに慣れないうちは、Sは最大、Dは任意でいいと思います。
 
 - ### <span style="color:#0066FF">Release</span>
@@ -118,10 +118,12 @@ Pluckに似ていますが、Sustainを0でなくすると、音の出だしの�
 			<div id="synth">
 				<div style="position:absolute;left:48px;top:20px;width:540px;height:120px">
 					<svg viewBox="0 0 560 120" width="560" height="120">
-						<path stroke="#FFFFFF" id="envGraph" stroke-width="2" fill="#666666" d=""/>
-						<path stroke="#FF0066" id="envGraphA" stroke-width="4" d=""/>
-						<path stroke="#00FF66" id="envGraphD" stroke-width="4" d=""/>
-						<path stroke="#0066FF" id="envGraphR" stroke-width="4" d=""/>
+						<path stroke="#FFFFFF" id="envGraph" stroke-width="2" fill="#444444" d="M 0 0"/>
+						<path stroke="#FF0066" id="envGraphA" stroke-width="4" d="M 0 0"/>
+						<path stroke="#00FF66" id="envGraphD" stroke-width="4" d="M 0 0"/>
+						<path stroke="#444444" id="envGraphS" stroke-width="4" d="M 0 0"/>
+						<path stroke="#0066FF" id="envGraphR" stroke-width="4" d="M 0 0"/>
+						<path stroke="#FFFFFF" id="envGraphOff" stroke-width="4" stroke-dasharray="1 2" d="M 0 0"/>
 					</svg>
 				</div>
 				<div style="position:absolute;left:5px;top:150px">
@@ -149,11 +151,18 @@ Pluckに似ていますが、Sustainを0でなくすると、音の出だしの�
 		<script src="./js/style.js" type="text/javascript"></script>
 
 		<script>
+			var synth = T("SynthDef").play();
+			var envA=T("param",{value:0.2*1000.});
+			var envD=T("param",{value:0.4*1000.});
+			var envS=T("param",{value:0.6});
+			var envR=T("param",{value:0.3*1000.});
 
-			var osc,env;
-			var osc=T("saw");
-			var env=T("adsr",{a:10,d:10,s:1,r:10});
-			var synth=T("OscGen",{osc:osc,env:env,mul:.25}).play();
+			synth.def = function(opts)
+			{
+				var osc = T("saw", {freq:opts.freq,mul:0.25});
+				var env = T("env", {table:[0.,[1.,envA.value],[envS.value,envD.value],[0.,envR.value]],releaseNode:3}, osc);
+				return env.on("ended", opts.doneAction).bang();
+			};
 
 			var isOn=[];
 			for(var c=0;c<80;c++)
@@ -183,20 +192,27 @@ Pluckに似ていますが、Sustainを0でなくすると、音の出だしの�
 				}
 			}
 
-			var envA=0.2,envD=0.4,envS=0.6,envR=0.3;
-
 			function changeEnvGraph()
 			{
-				document.getElementById("envGraph").setAttribute("d","M 10 110 l "+envA*180+" -110 l "+envD*180+" "+(1-envS)*110+" l "+envR*180+" "+envS*110+" M 10 110 z");
-				document.getElementById("envGraphA").setAttribute("d","M 10 115 h "+envA*180+"");
-				document.getElementById("envGraphD").setAttribute("d","M 10 115 m "+envA*180+" 0 h "+envD*180+"");
-				document.getElementById("envGraphR").setAttribute("d","M 10 115 m "+envA*180+" 0 m "+envD*180+" 0 h "+envR*180+"");
+				var a=envA.value/1000.,d=envD.value/1000.,s=envS.value,r=envR.value/1000.;
+
+				document.getElementById("envGraph").setAttribute("d","M 10 110 l "+a*140+" -110 l "+d*140+" "+(1-s)*110+" h 100 l "+r*140+" "+s*110+" M 10 110 z");
+				document.getElementById("envGraphA").setAttribute("d","M 10 115 h "+a*140+"");
+				document.getElementById("envGraphD").setAttribute("d","M 10 115 m "+a*140+" 0 h "+d*140+"");
+				document.getElementById("envGraphS").setAttribute("d","M 10 115 m "+a*140+" 0 m "+d*140+" 0 h 100");
+				document.getElementById("envGraphOff").setAttribute("d","M 10 110 m "+a*140+" 0 m "+d*140+" 0 m 98 0 v "+(s*(-110))+"");
+				document.getElementById("envGraphR").setAttribute("d","M 10 115 m "+a*140+" 0 m "+d*140+" 0 m 100 0 h "+r*140+"");
 			}
 
-			function changeEnv()
+			function changeEnv(n,v)
 			{
-				var _table=[0.,[1.,envA*1000.],[envS,envD*1000.],[0.,envR*1000.]];
-				synth.env=T("env",{table:_table,releaseNode:3});
+				switch(n)
+				{
+					case 0:envA.value=v*1000.;break;
+					case 1:envD.value=v*1000.;break;
+					case 2:envS.value=v;break;
+					case 3:envR.value=v*1000.;break;
+				}
 				changeEnvGraph();
 			}
 
@@ -204,10 +220,10 @@ Pluckに似ていますが、Sustainを0でなくすると、音の出だしの�
 
 			function preset(a,d,s,r)
 			{
-				envA=a;
-				envD=d;
-				envS=s;
-				envR=r;
+				envA.value=a*1000.;
+				envD.value=d*1000.;
+				envS.value=s;
+				envR.value=r*1000.;
 				$("#envA").val(a).trigger("change");
 				$("#envD").val(d).trigger("change");
 				$("#envS").val(s).trigger("change");
@@ -226,20 +242,20 @@ Pluckに似ていますが、Sustainを0でなくすると、音の出だしの�
 			{
 				switch(num)
 				{
-					case 0: con("env change: a: "+round2(envA,2),"#00FF66");break;
-					case 1: con("env change: d: "+round2(envD,2),"#00FF66");break;
-					case 2: con("env change: s: "+round2(envS,2),"#00FF66");break;
-					case 3: con("env change: r: "+round2(envR,2),"#00FF66");break;
+					case 0: con("env a: "+round2(envA.value,0)+" ms","#00FF66");break;
+					case 1: con("env d: "+round2(envD.value,0)+" ms","#00FF66");break;
+					case 2: con("env s: "+round2(envS.value,2),"#00FF66");break;
+					case 3: con("env r: "+round2(envR.value,0)+" ms","#00FF66");break;
 				}
 			}
 
 			$(function()
 			{
 				var knobTemp={"min":0,"max":1,"step":.001,"thickness":.6,"angleOffset":-150,"angleArc":300,"width":96,"displayInput":false,"bgColor":"#333333"};
-				$("#envA").knob($.extend(true,{"fgColor":"#FF0066","change":function(v){envA=v;changeEnv();},"release":function(){releaseEnv(0);}},knobTemp));
-				$("#envD").knob($.extend(true,{"fgColor":"#00FF66","change":function(v){envD=v;changeEnv();},"release":function(){releaseEnv(1);}},knobTemp));
-				$("#envS").knob($.extend(true,{"fgColor":"#FFFFFF","change":function(v){envS=v;changeEnv();},"release":function(){releaseEnv(2);}},knobTemp));
-				$("#envR").knob($.extend(true,{"fgColor":"#0066FF","change":function(v){envR=v;changeEnv();},"release":function(){releaseEnv(3);}},knobTemp));
+				$("#envA").knob($.extend(true,{"fgColor":"#FF0066","change":function(v){changeEnv(0,v);},"release":function(){releaseEnv(0);}},knobTemp));
+				$("#envD").knob($.extend(true,{"fgColor":"#00FF66","change":function(v){changeEnv(1,v);},"release":function(){releaseEnv(1);}},knobTemp));
+				$("#envS").knob($.extend(true,{"fgColor":"#FFFFFF","change":function(v){changeEnv(2,v);},"release":function(){releaseEnv(2);}},knobTemp));
+				$("#envR").knob($.extend(true,{"fgColor":"#0066FF","change":function(v){changeEnv(3,v);},"release":function(){releaseEnv(3);}},knobTemp));
 			});
 		</script>
 	</body>

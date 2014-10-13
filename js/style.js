@@ -25,7 +25,7 @@ function con(str,clr)
 	document.getElementById("console").innerHTML=temp+"<span style=\"color:"+clr+";\">"+str+"</span><br>";
 	var temp=document.getElementById("console").innerHTML;
 	conRow++;
-	if(13<conRow)
+	if(12<conRow)
 	{
 		conRow--;
 		document.getElementById("console").innerHTML=temp.slice(temp.indexOf("<br>")+4);
