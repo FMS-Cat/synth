@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>FMS_Cat - ツマミ怖くないっ！シンセ講座 第4回 ビブラート ( Pitch, LFO )</title>
+   		<link rel="stylesheet" href="./css/github-markdown.css">
+		<link rel="stylesheet" href="./css/style.css">
+		<style type="text/css">
+			strong
+			{
+				background: #FFFF00;
+			}
+
+			.preset
+			{
+				font-size: 24px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="article" class="markdown-body" style="width:640px;height:320px;">
+#[ツマミ怖くないっ！シンセ講座](http://fms-cat.github.io/synth/)
+
+##第4回 ビブラート <span style="font-size:16px;">( Pitch, LFO )</span>
+
+今回は**音程**を変えたいと思います。  
+えっ？すでにキーボードで音程が変えられるのでは、と？いいや、違うんです。  
+キーボード以外の手段で音程を変えることにより、**音にいろいろな表情が付きます**よ！
+
+シンセサイザーにおいて、音程の変化を用いたテクニックは本当にたくさんあります。  
+ピッチベンド、エンベロープ、ポルタメント、デチューン…  
+そして、今回紹介する**ビブラート**です。
+
+ビブラートという語はシンセサイザー用語ではなく、元々は声楽や器楽でも使われる語ですね。  
+長い音を演奏するときに、**音程を揺らす演奏技法**です。  
+アレです、カラオケで点が高くなるやつです。  
+
+声や楽器などでビブラートを使いたいときは、相当の訓練が必要ですが、シンセサイザーなら**自動**でできてしまいます！すごい！  
+ここで登場するのが**LFO**という概念です。
+
+### LFO
+LFOとは、 **Low Frequency Oscillator** の略です。  
+直訳すれば、「**低い周波数のオシレータ**」という意味ですね。  
+はい、**オシレータ**なんです。[第1回](./1.html)でやったやつですね。ちなみに波形は **サイン波**<img src="./img/sin.svg" width="16" height="16"> が最も多く用いられます。  
+ただし、普通のオシレータと違うのは、**周波数が低い** ということ。  
+<a onclick="saySin(440)">普通のオシレータでラを発声した時が **440 Hz** </a>なのに対して、  
+<a onclick="saySin(4)">LFOは **4 Hz** くらいのものが多い</a>です。  
+…なんだよ！聞こえないじゃないか！と思ったあなた、それは正解です。  
+人間の可聴域は **20 Hz - 20,000 Hz** と言われていますから、**LFOから発される信号の多くは人間には聞こえません**。
+
+ではこのLFOを一体どのように使うか？  
+今までのオシレータの使い方は、信号を直接スピーカーに送り、音そのものとして利用していましたね。  
+LFOはそうではなく、**シンセ内部のパラメータ**として使います。**揺れるパラメータ**です。  
+<a onClick="lfo0()">音量に用いたり</a>、<a onClick="lfo1()">フィルターに用いたり</a>もできますが、  
+今回はこれを音程に用いて、**音程を揺らしてみましょう**。  
+なお、LFOに用いている波形は　サイン波<img src="./img/sin.svg" width="16" height="16">　ですが、メインのオシレータは　ノコギリ波<img src="./img/saw.svg" width="16" height="16"> です。
+
+<a onClick="preset(0,0,0)">最初の状態</a>では、音にビブラートは全くかかっていませんね。  
+今回はツマミを3つ用意しました。
+
+- <span style="color:#00DD66">Frequency</span>  
+**音程を揺らす速度**を指定します。  
+LFOの周波数（音程）に相当します。
+
+- <span style="color:#FF0066">Amount</span>
+**音程の揺れ幅**を指定します。  
+Amountは本当に少しの操作でも音が大きく変化してしまうので、注意が必要です。  
+LFOの振幅（音量）に相当します。
+
+- <span style="color:#0066FF">Attack</span>
+いきなり音程が揺れてしまうと気持ち悪いので、**音程の揺れはじめる時間**も指定できます。  
+ここでいうAttackは、[エンベロープ](./2.html)の時のAttackと全く同じもので、それをLFOに対して施しています。
+
+---
+
+### プリセット
+幾つかプリセットを紹介しようと思います。
+
+- <a class="preset" onclick="preset(500,7,.02)">Lead</a>  
+自分のお気に入りの音です。  
+ビブラートの最も一般的な使い方だと思います。  
+メロディなどに使うとなかなかカッコよくないですか？
+
+- <a class="preset" onclick="preset(0,17,.006)">Flutter</a>  
+より細かく揺らしてみました。  
+音色自体が変わったような感じですよね。
+
+- <a class="preset" onclick="preset(1000,14,1)">FX</a>  
+もはやビブラートではなくエフェクト音になりました。  
+シンセを用いたエフェクト音の作成は昔から試行され続けていて、底なし沼ですよね。
+
+- <a class="preset" onclick="preset(0,0.5,.5)">Weird</a>  
+とんでもなくマヌケな音ですね。人が喋っているようにも聞こえます。  
+「ドファーレー」と弾くとお母さんにお菓子を買ってもらう時のイントネーションになります。
+
+- <a class="preset" onclick="preset(0,2.5,.35)">Pacman</a>  
+<iframe width="420" height="315" src="//www.youtube.com/embed/uswzriFIf_k" frameborder="0" allowfullscreen></iframe>
+（ホンモノは三角波です）
+
+---
+
+ビブラートは、フィルターなどに比べると地味な変化と思われるかもしれませんが、  
+うまく使うとオシレータの原音の安っぽさが一気に消えてとてもカッコよくなります。  
+かといって、**なんにでも使うべきというわけではなく**、あくまでも音程を揺らしているため、**かえって気持ち悪くなってしまう**場合もあります。  
+上手に活用しましょう！
+
+次回は、今までにやったエンベロープとLFOの知識を活用して、もう一度フィルターで遊んでみましょう。  
+「フィルター2 ( LPF + ADSR, LFO )」の予定です。
+
+---
+
+- <a class="preset" onclick="preset(0,410,4.4)">Bending</a> (オマケ)  
+本来ノブだけでは設定できない値まで設定してしまいました。チートですね。  
+極端に速度と揺れ幅を大きくするとこういう音になってしまうみたいです。
+		</div>
+		<div style="position:fixed;bottom:0px;left:0px;margin:0px;padding:0px;width:100%;height:272px;background-color:#FFFFFF;">
+			<div id="synth">
+				<div style="position:absolute;left:58px;top:0px;width:540px;height:120px">
+				</div>
+				<div style="position:absolute;left:45px;top:200px">
+					<div style="position:absolute;left:0px;color:#0066FF;width:160px;" align="center">Attack</div>
+					<div style="position:absolute;left:200px;color:#00FF66;width:160px;" align="center">Frequency</div>
+					<div style="position:absolute;left:400px;color:#FF0066;width:160px;" align="center">Amount</div>
+				</div>
+				<div style="position:absolute;left:45px;top:40px">
+					<div style="position:absolute;left:0px;"><input type="text" value=".0" id="vibA"></div>
+					<div style="position:absolute;left:200px;"><input type="text" value=".0" id="vibF"></div>
+					<div style="position:absolute;left:400px;"><input type="text" value=".0" id="vibD"></div>
+				</div>
+			</div>
+			<div id="console" style="width: 0px;visibility:visible;">
+			</div>
+		</div>
+
+		<script src="./js/marked.js"></script>
+		<script src="./js/timbre.js" type="text/javascript"></script>
+		<script src="./js/jquery.js" type="text/javascript"></script>
+		<script src="./js/jquery.knob.js" type="text/javascript"></script>
+		<script src="./js/k2n.js" type="text/javascript"></script>
+		<script src="./js/style.js" type="text/javascript"></script>
+
+		<script>
+
+			var synth = T("SynthDef").play();
+			var vibA = T("param", {value:0});
+			var vibF = T("param", {value:0});
+			var vibD = T("param", {value:0});
+
+			synth.def = function(opts)
+			{
+				var atk=T("param").linTo(1,vibA);
+				var lfo=T("*",T("sin",{freq:vibF}),vibD,atk);
+				var osc=T("saw",{freq:T("*",opts.freq,T("+",1,lfo)),mul:0.25});
+				var env=T("env",{table:[1.,0.],releaseNode:1}, osc);
+				return env.on("ended", opts.doneAction).bang();
+			};
+
+			var isOn=[];
+			for(var c=0;c<80;c++)
+			{
+				isOn.push(false);
+			}
+
+			function saySin(freq)
+			{
+				var env = T("env", {table:[1.,[1.,1000,],0.]},T("sin",{freq:freq,mul:.5})).on("ended", function(){this.pause();}).bang().play();
+			}
+
+			function lfo0()
+			{
+				var lfo = T("sin",{freq:4,mul:.2,add:.3});
+				var osc = T("*",T("saw",{freq:220}),lfo);
+				var env = T("env", {table:[1.,[1.,2000,],0.]},osc).on("ended", function(){this.pause();}).bang().play();
+			}
+
+			function lfo1()
+			{
+				
+				var lfo = T("sin",{freq:4,mul:2400,add:3200});
+				var osc = T("saw",{freq:220,mul:.4});
+				var lpf = T("lpf", {cutoff:lfo, Q:2}, osc);
+				var env = T("env", {table:[1.,[1.,2000,],0.]},lpf).on("ended", function(){this.pause();}).bang().play();
+			}
+
+			document.onkeydown=function()
+			{
+				var note=k2n(window.event.keyCode);
+				if(note!==0&&!(isOn[note]))
+				{
+					synth.noteOn(note,64);
+					isOn[note]=true;
+					con("note on: "+note,"#FFFFFF");
+				}
+			}
+
+			document.onkeyup=function()
+			{
+				var note=k2n(window.event.keyCode);
+				if(note!==0&&isOn[note])
+				{
+					synth.noteOff(note,64);
+					isOn[note]=false;
+					con("note off: "+note,"#BBBBBB");
+				}
+			}
+
+			function changeKnob(target,param)
+			{
+				switch(target)
+				{
+					case 0: vibA.value=(param*1000.);break;
+					case 1: vibF.value=(param*20.);break;
+					case 2: vibD.value=(param);break;
+				}
+			}
+
+			function round2(num,dec)
+			{
+				num*=Math.pow(10,dec);
+				num=Math.round(num);
+				return num/Math.pow(10,dec);
+			}
+
+			function releaseKnob(num)
+			{
+				switch(num)
+				{
+					case 0: con("vibrato attack: "+round2(vibA.value,0)+" ms","#00FF66");break;
+					case 1: con("vibrato frequency: "+round2(vibF.value,1)+" Hz","#00FF66");break;
+					case 2: con("vibrato amount: "+round2(vibD.value,2),"#00FF66");break;
+				}
+			}
+
+			function preset(a,f,d)
+			{
+				vibA.value=a;
+				vibF.value=f;
+				vibD.value=d;
+				$("#vibA").val(a/1000).trigger("change");
+				$("#vibF").val(f/20).trigger("change");
+				$("#vibD").val(d).trigger("change");
+			}
+
+			$(function()
+			{
+				var knobTemp={"min":0,"max":1,"step":.001,"thickness":.6,"angleOffset":-150,"angleArc":300,"width":160,"displayInput":false,"bgColor":"#333333"};
+				$("#vibA").knob($.extend(true,{"fgColor":"#0066FF","change":function(v){changeKnob(0,v);},"release":function(){releaseKnob(0);}},knobTemp));
+				$("#vibF").knob($.extend(true,{"fgColor":"#00FF66","change":function(v){changeKnob(1,v);},"release":function(){releaseKnob(1);}},knobTemp));
+				$("#vibD").knob($.extend(true,{"fgColor":"#FF0066","change":function(v){changeKnob(2,v);},"release":function(){releaseKnob(2);}},knobTemp));
+			});
+		</script>
+	</body>
+</html>
