@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>FMS_Cat - ツマミ怖くないっ！シンセ講座 第5回 フィルター (2) ( LPF + ADSR, LFO )</title>
+   		<link rel="stylesheet" href="./css/github-markdown.css">
+		<link rel="stylesheet" href="./css/style.css">
+		<style type="text/css">
+			strong
+			{
+				background: #FFFF00;
+			}
+
+			.preset
+			{
+				font-size: 24px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="article" class="markdown-body" style="width:640px;height:320px;">
+#[ツマミ怖くないっ！シンセ講座](http://fms-cat.github.io/synth/)
+
+##第5回 フィルター (2) <span style="font-size:16px;">( LPF + ADSR, LFO )</span>
+
+意見求む
+		</div>
+		<div style="position:fixed;bottom:0px;left:0px;margin:0px;padding:0px;width:100%;height:272px;background-color:#FFFFFF;">
+			<div id="synth">
+				<div style="position:absolute;left:58px;top:0px;width:540px;height:120px">
+				</div>
+				<div style="position:absolute;left:35px;top:35px">
+					<div style="position:absolute;left:0px;"><input type="text" value=".0" id="lpfC"></div>
+					<div style="position:absolute;left:200px;top:140px"><input type="text" value=".0" id="lpfR"></div>
+					<div style="position:absolute;left:250px;"><input type="text" value=".0" id="envA"></div>
+					<div style="position:absolute;left:300px;"><input type="text" value=".0" id="envD"></div>
+					<div style="position:absolute;left:350px;"><input type="text" value=".0" id="envAm"></div>
+					<div style="position:absolute;left:250px;top:50px;"><input type="text" value=".0" id="lfoF"></div>
+					<div style="position:absolute;left:300px;top:50px;"><input type="text" value=".0" id="lfoAm"></div>
+					<div style="position:absolute;left:500px;top:100px;"><input type="text" value=".0" id="range"></div>
+				</div>
+			</div>
+			<div id="console" style="width: 0px;visibility:visible;">
+			</div>
+		</div>
+
+		<script src="./js/marked.js"></script>
+		<script src="./js/timbre.js" type="text/javascript"></script>
+		<script src="./js/jquery.js" type="text/javascript"></script>
+		<script src="./js/jquery.knob.js" type="text/javascript"></script>
+		<script src="./js/k2n.js" type="text/javascript"></script>
+		<script src="./js/style.js" type="text/javascript"></script>
+
+		<script>
+
+			var synth = T("SynthDef").play();
+			var lpfC = T("param", {value:0});
+			var lpfR = T("param", {value:0});
+			var envA = T("param", {value:0});
+			var envD = T("param", {value:0});
+			var envAm = T("param", {value:0});
+			var lfoF = T("param", {value:0});
+			var lfoAm = T("param", {value:0});
+			var range = T("param",{value:0});
+
+			synth.def = function(opts)
+			{
+				var osc=T("saw",{freq:T("*",opts.freq,Math.pow(2,Math.floor(range.value-1.5))),mul:0.25});
+				var cutEnv=T("env",{table:[0.,[1.,envA.value],[0.,envD.value,],0.],releaseNode:3}).bang();
+				var cutLfo=T("sin",{freq:lfoF});
+				var cut=T("+", lpfC , T("*",cutEnv,envAm,20000) , T("*",cutLfo,lfoAm,20000) );
+				var lpf=T("lpf",{cutoff:cut,Q:lpfR},osc);
+				var env=T("env",{table:[1.,0.],releaseNode:1}, lpf);
+				return env.on("ended", opts.doneAction).bang();
+			};
+
+			var isOn=[];
+			for(var c=0;c<80;c++)
+			{
+				isOn.push(false);
+			}
+
+			document.onkeydown=function()
+			{
+				var note=k2n(window.event.keyCode);
+				if(note!==0&&!(isOn[note]))
+				{
+					synth.noteOn(note,64);
+					isOn[note]=true;
+					con("note on: "+note,"#FFFFFF");
+				}
+			}
+
+			document.onkeyup=function()
+			{
+				var note=k2n(window.event.keyCode);
+				if(note!==0&&isOn[note])
+				{
+					synth.noteOff(note,64);
+					isOn[note]=false;
+					con("note off: "+note,"#BBBBBB");
+				}
+			}
+
+			function changeKnob(target,param)
+			{
+				switch(target)
+				{
+					case 0: lpfC.value=(10+param*19990);break;
+					case 1: lpfR.value=(param*40.);break;
+					case 2: envA.value=(param*1000.);break;
+					case 3: 
+						if(param<.99)
+						{
+							envD.value=(param*1000.);break;	
+						}
+						else
+						{
+							envD.value=99999999.;break;
+						}
+					case 4: envAm.value=(param);break;
+					case 5: lfoF.value=(param*20.);break;
+					case 6: lfoAm.value=(param);break;
+					case 7: range.value=(param);break;
+				}
+			}
+
+			function round2(num,dec)
+			{
+				num*=Math.pow(10,dec);
+				num=Math.round(num);
+				return num/Math.pow(10,dec);
+			}
+
+			function releaseKnob(num)
+			{
+				switch(num)
+				{
+					case 0: con("lpf cutoff: "+round2(lpfC.value,0)+" Hz","#00FF66");break;
+					case 1: con("lpf resonance: "+round2(lpfR.value/40.,2)+"","#00FF66");break;
+					case 2: con("lpf envelope a: "+round2(envA.value,0)+" ms","#00FF66");break;
+					case 3: 
+						if(envD.value<990)
+						{
+							con("lpf envelope d: "+round2(envD.value,0)+" ms","#00FF66");break;
+						}
+						else
+						{
+							con("lpf envelope d: infinity","#00FF66");break;
+						}
+					case 4: con("lpf envelope amount: "+round2(envAm.value,2)+"","#00FF66");break;
+					case 5: con("lpf lfo frequency: "+round2(lfoF.value,0)+" Hz","#00FF66");break;
+					case 6: con("lpf lfo amount: "+round2(lfoAm.value,2)+"","#00FF66");break;
+					case 7: con("osc range: "+round2(Math.pow(2,Math.floor(6.5-range.value)),0)+"'","#00FF66");break;
+				}
+			}
+
+			function preset(a,b,c,d,e,f,g,h)
+			{
+				lpfC.value=a;
+				lpfR.value=b;
+				envA.value=c;
+				envD.value=d;
+				envAm.value=e;
+				lfoF.value=f;
+				lfoAm.value=g;
+				range.value=h;
+				$("#lfoC").val(a/20000.).trigger("change");
+				$("#lfoR").val(b/40.).trigger("change");
+				$("#envA").val(c/1000.).trigger("change");
+				$("#envD").val(d/1000.).trigger("change");
+				$("#envAm").val(e).trigger("change");
+				$("#lfoF").val(f/20.).trigger("change");
+				$("#lfoAm").val(g).trigger("change");
+				$("#range").val(h).trigger("change");
+			}
+
+			$(function()
+			{
+				var knobTemp={"min":0,"max":1,"step":.001,"thickness":.6,"angleOffset":-150,"angleArc":300,"width":40,"displayInput":false,"bgColor":"#333333"};
+				$("#lpfC").knob($.extend(true,knobTemp,{"width":200,"fgColor":"#0066FF","change":function(v){changeKnob(0,v);},"release":function(){releaseKnob(0);}}));
+				$("#lpfR").knob($.extend(true,knobTemp,{"width":40,"fgColor":"#FF0066","change":function(v){changeKnob(1,v);},"release":function(){releaseKnob(1);}}));
+				$("#envA").knob($.extend(true,knobTemp,{"fgColor":"#FF0066","change":function(v){changeKnob(2,v);},"release":function(){releaseKnob(2);}}));
+				$("#envD").knob($.extend(true,knobTemp,{"fgColor":"#00FF66","change":function(v){changeKnob(3,v);},"release":function(){releaseKnob(3);}}));
+				$("#envAm").knob($.extend(true,knobTemp,{"fgColor":"#0066FF","change":function(v){changeKnob(4,v);},"release":function(){releaseKnob(4);}}));
+				$("#lfoF").knob($.extend(true,knobTemp,{"fgColor":"#00FF66","change":function(v){changeKnob(5,v);},"release":function(){releaseKnob(5);}}));
+				$("#lfoAm").knob($.extend(true,knobTemp,{"fgColor":"#0066FF","change":function(v){changeKnob(6,v);},"release":function(){releaseKnob(6);}}));
+				$("#range").knob($.extend(true,knobTemp,{"max":5,"step":1,"fgColor":"#FFFFFF","change":function(v){changeKnob(7,v);},"release":function(){releaseKnob(7);}}));
+			});
+		</script>
+	</body>
+</html>
