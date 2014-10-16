@@ -28,17 +28,29 @@
 		</div>
 		<div style="position:fixed;bottom:0px;left:0px;margin:0px;padding:0px;width:100%;height:272px;background-color:#FFFFFF;">
 			<div id="synth">
-				<div style="position:absolute;left:58px;top:0px;width:540px;height:120px">
+				<div style="position:absolute;left:30px;top:25px;">
+					<div style="position:absolute;left:330px;top:190px;width:200px;color:#0066FF;" align="center">Cutoff</div>
+					<div style="position:absolute;left:530px;top:190px;width:50px;color:#66BBFF;" align="center">Res</div>
+					<div style="position:absolute;left:110px;top:76px;width:50px;color:#FF66BB;" align="center">Attack</div>
+					<div style="position:absolute;left:170px;top:76px;width:50px;color:#FF66BB;" align="center">Decay</div>
+					<div style="position:absolute;left:230px;top:76px;width:80px;color:#FF0066;" align="center">Amount</div>
+					<div style="position:absolute;left:170px;top:190px;width:50px;color:#66FFBB;" align="center">Freq</div>
+					<div style="position:absolute;left:230px;top:190px;width:80px;color:#00FF66;" align="center">Amount</div>
+					<div style="position:absolute;left:10px;top:190px;width:80px;color:#FFFFFF;" align="center">Range</div>
 				</div>
-				<div style="position:absolute;left:35px;top:35px">
-					<div style="position:absolute;left:0px;"><input type="text" value=".0" id="lpfC"></div>
-					<div style="position:absolute;left:200px;top:140px"><input type="text" value=".0" id="lpfR"></div>
-					<div style="position:absolute;left:250px;"><input type="text" value=".0" id="envA"></div>
-					<div style="position:absolute;left:300px;"><input type="text" value=".0" id="envD"></div>
-					<div style="position:absolute;left:350px;"><input type="text" value=".0" id="envAm"></div>
-					<div style="position:absolute;left:250px;top:50px;"><input type="text" value=".0" id="lfoF"></div>
-					<div style="position:absolute;left:300px;top:50px;"><input type="text" value=".0" id="lfoAm"></div>
-					<div style="position:absolute;left:500px;top:100px;"><input type="text" value=".0" id="range"></div>
+				<div style="position:absolute;left:30px;top:25px">
+				<img src="./img/saw1.svg" id="osc0" onClick="changeOsc(0)" width="36" height="36" style="position:absolute;left:10px;top:5px;">
+				<img src="./img/squ.svg" id="osc1" onClick="changeOsc(1)" width="36" height="36" style="position:absolute;left:52px;top:5px;">
+				<img src="./img/tri.svg" id="osc2" onClick="changeOsc(2)" width="36" height="36" style="position:absolute;left:10px;top:47px;">
+				<img src="./img/sin.svg" id="osc3" onClick="changeOsc(3)" width="36" height="36" style="position:absolute;left:52px;top:47px;">
+					<div style="position:absolute;left:330px;top:0px"><input type="text" value="1." id="lpfC"></div>
+					<div style="position:absolute;left:530px;top:142px"><input type="text" value=".0" id="lpfR"></div>
+					<div style="position:absolute;left:110px;top:28px"><input type="text" value=".2" id="envA"></div>
+					<div style="position:absolute;left:170px;top:28px"><input type="text" value=".4" id="envD"></div>
+					<div style="position:absolute;left:230px;top:0px"><input type="text" value=".0" id="envAm"></div>
+					<div style="position:absolute;left:170px;top:142px;"><input type="text" value=".25" id="lfoF"></div>
+					<div style="position:absolute;left:230px;top:114px;"><input type="text" value=".0" id="lfoAm"></div>
+					<div style="position:absolute;left:10px;top:114px;"><input type="text" value="2" id="range"></div>
 				</div>
 			</div>
 			<div id="console" style="width: 0px;visibility:visible;">
@@ -53,23 +65,32 @@
 		<script src="./js/style.js" type="text/javascript"></script>
 
 		<script>
-
-			var synth = T("SynthDef").play();
-			var lpfC = T("param", {value:0});
-			var lpfR = T("param", {value:0});
-			var envA = T("param", {value:0});
-			var envD = T("param", {value:0});
-			var envAm = T("param", {value:0});
-			var lfoF = T("param", {value:0});
-			var lfoAm = T("param", {value:0});
-			var range = T("param",{value:0});
+			var synth=T("SynthDef").play();
+			var oscIsSaw=T("param",{value:1.});
+			var oscIsSqu=T("param",{value:0.});
+			var oscIsTri=T("param",{value:0.});
+			var oscIsSin=T("param",{value:0.});
+			var lpfC=T("param", {value:10000});
+			var lpfCs=T("param", {value:0});
+			var lpfR=T("param", {value:0});
+			var envA=T("param", {value:200});
+			var envD=T("param", {value:400});
+			var envAm=T("param", {value:0});
+			var lfoF=T("param", {value:5});
+			var lfoAm=T("param", {value:0});
+			var range=T("param",{value:.5});
 
 			synth.def = function(opts)
 			{
-				var osc=T("saw",{freq:T("*",opts.freq,Math.pow(2,Math.floor(range.value-1.5))),mul:0.25});
+				var freq=T("*",opts.freq,range);
+				var oscSaw=T("*",T("saw",{freq:freq,mul:.25}),oscIsSaw);
+				var oscSqu=T("*",T("square",{freq:freq,mul:.25}),oscIsSqu);
+				var oscTri=T("*",T("tri",{freq:freq,mul:.25}),oscIsTri);
+				var oscSin=T("*",T("sin",{freq:freq,mul:.25}),oscIsSin);
+				var osc=T("+",oscSaw,oscSqu,oscTri,oscSin);
 				var cutEnv=T("env",{table:[0.,[1.,envA.value],[0.,envD.value,],0.],releaseNode:3}).bang();
 				var cutLfo=T("sin",{freq:lfoF});
-				var cut=T("+", lpfC , T("*",cutEnv,envAm,20000) , T("*",cutLfo,lfoAm,20000) );
+				var cut=T("+", lpfC , T("*",cutEnv,envAm,10000) , T("*",cutLfo,lfoAm,10000) );
 				var lpf=T("lpf",{cutoff:cut,Q:lpfR},osc);
 				var env=T("env",{table:[1.,0.],releaseNode:1}, lpf);
 				return env.on("ended", opts.doneAction).bang();
@@ -107,7 +128,7 @@
 			{
 				switch(target)
 				{
-					case 0: lpfC.value=(10+param*19990);break;
+					case 0: lpfC.value=(10+param*9990);break;
 					case 1: lpfR.value=(param*40.);break;
 					case 2: envA.value=(param*1000.);break;
 					case 3: 
@@ -122,7 +143,7 @@
 					case 4: envAm.value=(param);break;
 					case 5: lfoF.value=(param*20.);break;
 					case 6: lfoAm.value=(param);break;
-					case 7: range.value=(param);break;
+					case 7: range.value=(Math.pow(2,Math.floor(param-2.5)));break;
 				}
 			}
 
@@ -137,26 +158,26 @@
 			{
 				switch(num)
 				{
-					case 0: con("lpf cutoff: "+round2(lpfC.value,0)+" Hz","#00FF66");break;
-					case 1: con("lpf resonance: "+round2(lpfR.value/40.,2)+"","#00FF66");break;
-					case 2: con("lpf envelope a: "+round2(envA.value,0)+" ms","#00FF66");break;
+					case 0: con("lpf cutoff: "+round2(lpfC.value,0)+" Hz","#0066FF");break;
+					case 1: con("lpf resonance: "+round2(lpfR.value/40.,2)+"","#0066FF");break;
+					case 2: con("lpf envelope a: "+round2(envA.value,0)+" ms","#FF0066");break;
 					case 3: 
 						if(envD.value<990)
 						{
-							con("lpf envelope d: "+round2(envD.value,0)+" ms","#00FF66");break;
+							con("lpf envelope d: "+round2(envD.value,0)+" ms","#FF0066");break;
 						}
 						else
 						{
-							con("lpf envelope d: infinity","#00FF66");break;
+							con("lpf envelope d: infinity","#FF0066");break;
 						}
-					case 4: con("lpf envelope amount: "+round2(envAm.value,2)+"","#00FF66");break;
+					case 4: con("lpf envelope amount: "+round2(envAm.value,2)+"","#FF0066");break;
 					case 5: con("lpf lfo frequency: "+round2(lfoF.value,0)+" Hz","#00FF66");break;
 					case 6: con("lpf lfo amount: "+round2(lfoAm.value,2)+"","#00FF66");break;
-					case 7: con("osc range: "+round2(Math.pow(2,Math.floor(6.5-range.value)),0)+"'","#00FF66");break;
+					case 7: con("osc range: "+(1/range.value*8)+"'","#FFFFFF");break;
 				}
 			}
 
-			function preset(a,b,c,d,e,f,g,h)
+			function preset(a,b,c,d,e,f,g,h,i)
 			{
 				lpfC.value=a;
 				lpfR.value=b;
@@ -166,7 +187,7 @@
 				lfoF.value=f;
 				lfoAm.value=g;
 				range.value=h;
-				$("#lfoC").val(a/20000.).trigger("change");
+				$("#lfoC").val(a/10000.).trigger("change");
 				$("#lfoR").val(b/40.).trigger("change");
 				$("#envA").val(c/1000.).trigger("change");
 				$("#envD").val(d/1000.).trigger("change");
@@ -174,19 +195,36 @@
 				$("#lfoF").val(f/20.).trigger("change");
 				$("#lfoAm").val(g).trigger("change");
 				$("#range").val(h).trigger("change");
+				changeOsc(i);
+			}
+
+			function changeOsc(i)
+			{
+				oscIsSaw.value=i===0?1.:0.;
+				oscIsSqu.value=i===1?1.:0.;
+				oscIsTri.value=i===2?1.:0.;
+				oscIsSin.value=i===3?1.:0.;
+				document.getElementById("osc0").src=i===0?"./img/saw1.svg":"./img/saw.svg";
+				document.getElementById("osc1").src=i===1?"./img/squ1.svg":"./img/squ.svg";
+				document.getElementById("osc2").src=i===2?"./img/tri1.svg":"./img/tri.svg";
+				document.getElementById("osc3").src=i===3?"./img/sin1.svg":"./img/sin.svg";
+				if(i===0){con("osc wave: saw","#FFFFFF");}
+				if(i===1){con("osc wave: square","#FFFFFF");}
+				if(i===2){con("osc wave: triangle","#FFFFFF");}
+				if(i===3){con("osc wave: sine","#FFFFFF");}
 			}
 
 			$(function()
 			{
-				var knobTemp={"min":0,"max":1,"step":.001,"thickness":.6,"angleOffset":-150,"angleArc":300,"width":40,"displayInput":false,"bgColor":"#333333"};
+				var knobTemp={"min":0,"max":1,"step":.001,"thickness":.6,"angleOffset":-150,"angleArc":300,"displayInput":false,"bgColor":"#333333"};
 				$("#lpfC").knob($.extend(true,knobTemp,{"width":200,"fgColor":"#0066FF","change":function(v){changeKnob(0,v);},"release":function(){releaseKnob(0);}}));
-				$("#lpfR").knob($.extend(true,knobTemp,{"width":40,"fgColor":"#FF0066","change":function(v){changeKnob(1,v);},"release":function(){releaseKnob(1);}}));
-				$("#envA").knob($.extend(true,knobTemp,{"fgColor":"#FF0066","change":function(v){changeKnob(2,v);},"release":function(){releaseKnob(2);}}));
-				$("#envD").knob($.extend(true,knobTemp,{"fgColor":"#00FF66","change":function(v){changeKnob(3,v);},"release":function(){releaseKnob(3);}}));
-				$("#envAm").knob($.extend(true,knobTemp,{"fgColor":"#0066FF","change":function(v){changeKnob(4,v);},"release":function(){releaseKnob(4);}}));
-				$("#lfoF").knob($.extend(true,knobTemp,{"fgColor":"#00FF66","change":function(v){changeKnob(5,v);},"release":function(){releaseKnob(5);}}));
-				$("#lfoAm").knob($.extend(true,knobTemp,{"fgColor":"#0066FF","change":function(v){changeKnob(6,v);},"release":function(){releaseKnob(6);}}));
-				$("#range").knob($.extend(true,knobTemp,{"max":5,"step":1,"fgColor":"#FFFFFF","change":function(v){changeKnob(7,v);},"release":function(){releaseKnob(7);}}));
+				$("#lpfR").knob($.extend(true,knobTemp,{"width":50,"fgColor":"#66BBFF","change":function(v){changeKnob(1,v);},"release":function(){releaseKnob(1);}}));
+				$("#envA").knob($.extend(true,knobTemp,{"width":50,"fgColor":"#FF66BB","change":function(v){changeKnob(2,v);},"release":function(){releaseKnob(2);}}));
+				$("#envD").knob($.extend(true,knobTemp,{"width":50,"fgColor":"#FF66BB","change":function(v){changeKnob(3,v);},"release":function(){releaseKnob(3);}}));
+				$("#envAm").knob($.extend(true,knobTemp,{"width":80,"fgColor":"#FF0066","change":function(v){changeKnob(4,v);},"release":function(){releaseKnob(4);}}));
+				$("#lfoF").knob($.extend(true,knobTemp,{"width":50,"fgColor":"#66FFBB","change":function(v){changeKnob(5,v);},"release":function(){releaseKnob(5);}}));
+				$("#lfoAm").knob($.extend(true,knobTemp,{"width":80,"fgColor":"#00FF66","change":function(v){changeKnob(6,v);},"release":function(){releaseKnob(6);}}));
+				$("#range").knob($.extend(true,knobTemp,{"width":80,"max":5,"step":1,"fgColor":"#FFFFFF","change":function(v){changeKnob(7,v);},"release":function(){releaseKnob(7);}}));
 			});
 		</script>
 	</body>
