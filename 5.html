@@ -39,10 +39,11 @@
 					<div style="position:absolute;left:10px;top:190px;width:80px;color:#FFFFFF;" align="center">Range</div>
 				</div>
 				<div style="position:absolute;left:30px;top:25px">
-				<img src="./img/saw1.svg" id="osc0" onClick="changeOsc(0)" width="36" height="36" style="position:absolute;left:10px;top:5px;">
-				<img src="./img/squ.svg" id="osc1" onClick="changeOsc(1)" width="36" height="36" style="position:absolute;left:52px;top:5px;">
-				<img src="./img/tri.svg" id="osc2" onClick="changeOsc(2)" width="36" height="36" style="position:absolute;left:10px;top:47px;">
-				<img src="./img/sin.svg" id="osc3" onClick="changeOsc(3)" width="36" height="36" style="position:absolute;left:52px;top:47px;">
+					<img src="./img/saw1.svg" id="osc0" onClick="changeOsc(0)" width="36" height="36" style="position:absolute;left:10px;top:5px;">
+					<img src="./img/squ.svg" id="osc1" onClick="changeOsc(1)" width="36" height="36" style="position:absolute;left:52px;top:5px;">
+					<img src="./img/tri.svg" id="osc2" onClick="changeOsc(2)" width="36" height="36" style="position:absolute;left:10px;top:47px;">
+					<img src="./img/sin.svg" id="osc3" onClick="changeOsc(3)" width="36" height="36" style="position:absolute;left:52px;top:47px;">
+
 					<div style="position:absolute;left:330px;top:0px"><input type="text" value="1." id="lpfC"></div>
 					<div style="position:absolute;left:530px;top:142px"><input type="text" value=".0" id="lpfR"></div>
 					<div style="position:absolute;left:110px;top:28px"><input type="text" value=".2" id="envA"></div>
@@ -51,6 +52,13 @@
 					<div style="position:absolute;left:170px;top:142px;"><input type="text" value=".25" id="lfoF"></div>
 					<div style="position:absolute;left:230px;top:114px;"><input type="text" value=".0" id="lfoAm"></div>
 					<div style="position:absolute;left:10px;top:114px;"><input type="text" value="2" id="range"></div>
+
+					<svg viewBox="-2 -2 102 32" width="104" height="34" style="position:absolute;left:111px;top:-10px">
+						<path stroke="#FFFFFF" id="envGraph" stroke-width="2" fill="#444444" d="M 0 0"/>
+					</svg>
+					<svg viewBox="-2 -2 102 32" width="104" height="34" style="position:absolute;left:111px;top:104px">
+						<path stroke="#FFFFFF" id="lfoGraph" stroke-width="2" fill="none" stroke-linejoin="round" d="M 0 0"/>
+					</svg>
 				</div>
 			</div>
 			<div id="console" style="width: 0px;visibility:visible;">
@@ -95,6 +103,18 @@
 				var env=T("env",{table:[1.,0.],releaseNode:1}, lpf);
 				return env.on("ended", opts.doneAction).bang();
 			};
+
+			function showGraph()
+			{
+				document.getElementById("envGraph").setAttribute("d","M 0 30 l "+envA.value/1000*50+" "+envAm.value*(-30)+" l "+envD.value/1000*50+" "+envAm.value*30+" h 100 M 0 30 z");
+				var lfoSin="M 0 15";
+				for(var c=0;c<100;c++)
+				{
+					lfoSin=lfoSin+"L "+c+" "+(15.+Math.sin(c*.03*lfoF.value)*(-15.)*lfoAm.value);
+				}
+				document.getElementById("lfoGraph").setAttribute("d",lfoSin);
+			}
+			showGraph();
 
 			var isOn=[];
 			for(var c=0;c<80;c++)
@@ -145,6 +165,7 @@
 					case 6: lfoAm.value=(param);break;
 					case 7: range.value=(Math.pow(2,Math.floor(param-2.5)));break;
 				}
+				showGraph();
 			}
 
 			function round2(num,dec)
@@ -196,6 +217,7 @@
 				$("#lfoAm").val(g).trigger("change");
 				$("#range").val(h).trigger("change");
 				changeOsc(i);
+				showGraph();
 			}
 
 			function changeOsc(i)
