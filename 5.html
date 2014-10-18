@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>FMS_Cat - ツマミ怖くないっ！シンセ講座 第5回 フィルター (2) ( LPF + ADSR, LFO )</title>
+		<title>FMS_Cat - ツマミ怖くないっ！シンセ講座 第5回 フィルター (2) ( LPF + Envelope, LFO )</title>
    		<link rel="stylesheet" href="./css/github-markdown.css">
 		<link rel="stylesheet" href="./css/style.css">
 		<style type="text/css">
@@ -22,38 +22,113 @@
 		<div id="article" class="markdown-body" style="width:640px;height:320px;">
 #[ツマミ怖くないっ！シンセ講座](http://fms-cat.github.io/synth/)
 
-##第5回 フィルター (2) <span style="font-size:16px;">( LPF + ADSR, LFO )</span>
+##第5回 フィルター (2) <span style="font-size:16px;">( LPF + Envelope, LFO )</span>
 
-意見求む
+今回は、[第3回](./3.html)に紹介した**フィルター**を、[第2回](./2.html)に紹介した**エンベロープ**や、[第4回](./4.html)に紹介した**LFO**で制御してみましょう。  
+ある意味、**今までの総復習**のような内容になると思います。  
+**…ツマミが多い！！** と思ったあなた、ご安心ください。**新しい概念は1つ**のみしか出てきません。
+
+では先に新しい概念だけ済ませてしまいましょう。  
+左下の **Range** という白いツマミです。  
+**オクターブを上下させる**ことができます。それだけです。  
+パソコンのキーボードだけだと約2オクターブしか出すことが出来ないため、必要かと思いつけました。
+
+さて、ここからは今までの復習をしながら、今回のパネルの説明をしていきたいと思います。  
+
+- #### Oscillatorセクション
+左側の白い部分が**Oscillatorセクション**です。**フィルターで加工する前**の生の音を作る部分です。  
+Oscillatorでオシレータの波形を選び（[第1回](./1.html)でやったやつ）、Rangeでオクターブを選びます。  
+今回はフィルターを用いた加工が主役となりますが、ここは**フィルターを通す前の音を作る**部分です。
+
+- #### <span style="color:#0066FF">Filterセクション</span>
+右側の青い部分が**Filterセクション**です。  
+[第3回](./3.html)でやったパラメータがそのまま2つあることがわかります。  
+また、フィルターはよく使うパラメータなので、フィルターのツマミは大きいことが多いですね。
+
+- #### <span style="color:#FF0066">Envelopeセクション</span>
+真ん中上の赤い部分が**Envelopeセクション**です。  
+[第2回](./2.html)ではエンベロープを音量に割り当てていましたが、今回は**エンベロープをフィルターに割り当てました**。  
+つまり、**ここのエンベロープにより、青くてデカいCutoffのパラメータが変わります（見た目上は変わらない）**。  
+赤の **Amount** ツマミによって、エンベロープを**Cutoffに送る割合**を設定します。  
+つまり、Amountが0だとEnvelopeセクションは全く意味を持ちません。  
+また、[第2回](./2.html)ではADSRという4つのパラメータを持つエンベロープを紹介しましたが、今回はAttackとDecayの**2つのパラメータ**しか使いません。  
+また、Decayのツマミを最大にした時にDecayの時間が∞となるようにしました。ちょっと音を作りやすくする工夫です。
+
+- #### <span style="color:#00DD66">LFOセクション</span>
+真ん中下の緑の部分が**LFOセクション**です。  
+[第4回](./4.html)ではLFOをビブラートとして音程に割り当てましたが、今回は**LFOもフィルターに割り当てました**。  
+つまり、**ここのLFOにより、青くてデカいCutoffのパラメータが変わります（見た目上は変わらない）**。エンベロープと全く同じですね。  
+緑の **Amount** ツマミによって、LFOを**Cutoffに送る割合**を設定します。  
+つまり、Amountが0だとLFOセクションは全く意味を持ちません。  
+今回はAttackパラメータはつけていません。
+
+### プリセット
+
+ここまで説明をしてみて、いまひとつ感覚がつかめないと思います。  
+**シンセの使い方や傾向はプリセットから分かる**ことも多いので、プリセットを見てみましょう。  
+
+- <a class="preset" onclick="preset(10,0,400,99999999,.5,5,0,3,0)">Brass</a>  
+金管楽器のような音ですね。  
+**エンベロープのAttack**を長くし、フィルターを時間的に変化させることで、音に表情がつきました。
+
+- <a class="preset" onclick="preset(10,0,0,200,.8,5,0,3,0)">Pluck</a>  
+弦を弾いたような音です。  
+エンベロープのAttackを0にして、**Decayを短く**した状態でAmountを上げるとこういった音が出ます。    
+[第二回](./2.html)では音量をエンベロープに割り当てて同じような音を出しましたが、フィルターだとまた違ったニュアンスが出ます。
+
+- <a class="preset" onclick="preset(50,17,0,300,.3,5,0,1,0)">Acid</a>  
+ローランドから発売された、TB-303というベースシンセに代表される音です。  
+**Resonance**がかかった状態でPluckのようにフィルターを変化させることでこういった音が出ます。  
+<iframe width="420" height="315" src="//www.youtube.com/embed/2c4l6ZacNjg" frameborder="0" allowfullscreen></iframe>
+
+- <a class="preset" onclick="preset(1500,12,200,400,0,5,.15,1,1)">Wobble</a>  
+とても安っぽいワブルベースの音が出来ました。  
+一定周期でフィルターなどを用いた音の変化がつくベース音をワブルベースと言います。  
+今回は**LFOを用いてフィルターを周期的に変化**させています。  
+ダブステップと呼ばれる音楽で多用されますね。
+
+- <a class="preset" onclick="preset(1500,36,200,400,0,1,.15,0,0)">Resonance Noise</a>  
+**Resonanceの値を極端に大きくする**ことでこういった音が得られます。  
+ノコギリ波の鋭く変化する部分がはっきりと聞こえると思います。
+
+---
+
+今回は使うツマミがとても多く、大変だったかもしれませんが、**一つ一つのツマミが持つ意味はとても単純**です。  
+**実際のシンセも同様**で、一つ一つのツマミの意味をしっかり認識すれば使いこなすことができます。  
+もし、使い方が全くわからなければ、**プリセットを試してみながら理解する**のも手です。  
+
+一応、この第5回でシンプルなシンセの使い方の解説はすべて終了したと思います。  
+次回以降何をするかはまったく決めていないため、要望がありましたら是非 [@FMS_Cat](http://twitter.com/FMS_Cat) までお願いします。 
 		</div>
 		<div style="position:fixed;bottom:0px;left:0px;margin:0px;padding:0px;width:100%;height:272px;background-color:#FFFFFF;">
 			<div id="synth">
 				<div style="position:absolute;left:30px;top:25px;">
+					<div style="position:absolute;left:10px;top:80px;width:80px;color:#FFFFFF;" align="center">Oscillator</div>
 					<div style="position:absolute;left:330px;top:190px;width:200px;color:#0066FF;" align="center">Cutoff</div>
 					<div style="position:absolute;left:530px;top:190px;width:50px;color:#66BBFF;" align="center">Res</div>
-					<div style="position:absolute;left:110px;top:76px;width:50px;color:#FF66BB;" align="center">Attack</div>
-					<div style="position:absolute;left:170px;top:76px;width:50px;color:#FF66BB;" align="center">Decay</div>
-					<div style="position:absolute;left:230px;top:76px;width:80px;color:#FF0066;" align="center">Amount</div>
+					<div style="position:absolute;left:110px;top:80px;width:50px;color:#FF66BB;" align="center">Attack</div>
+					<div style="position:absolute;left:170px;top:80px;width:50px;color:#FF66BB;" align="center">Decay</div>
+					<div style="position:absolute;left:230px;top:80px;width:80px;color:#FF0066;" align="center">Amount</div>
 					<div style="position:absolute;left:170px;top:190px;width:50px;color:#66FFBB;" align="center">Freq</div>
 					<div style="position:absolute;left:230px;top:190px;width:80px;color:#00FF66;" align="center">Amount</div>
 					<div style="position:absolute;left:10px;top:190px;width:80px;color:#FFFFFF;" align="center">Range</div>
 				</div>
 				<div style="position:absolute;left:30px;top:25px">
-					<img src="./img/saw1.svg" id="osc0" onClick="changeOsc(0)" width="36" height="36" style="position:absolute;left:10px;top:5px;">
-					<img src="./img/squ.svg" id="osc1" onClick="changeOsc(1)" width="36" height="36" style="position:absolute;left:52px;top:5px;">
-					<img src="./img/tri.svg" id="osc2" onClick="changeOsc(2)" width="36" height="36" style="position:absolute;left:10px;top:47px;">
-					<img src="./img/sin.svg" id="osc3" onClick="changeOsc(3)" width="36" height="36" style="position:absolute;left:52px;top:47px;">
+					<img src="./img/saw1.svg" id="osc0" onClick="changeOsc(0)" width="36" height="36" style="position:absolute;left:10px;top:0px;">
+					<img src="./img/squ.svg" id="osc1" onClick="changeOsc(1)" width="36" height="36" style="position:absolute;left:52px;top:0px;">
+					<img src="./img/tri.svg" id="osc2" onClick="changeOsc(2)" width="36" height="36" style="position:absolute;left:10px;top:42px;">
+					<img src="./img/sin.svg" id="osc3" onClick="changeOsc(3)" width="36" height="36" style="position:absolute;left:52px;top:42px;">
 
 					<div style="position:absolute;left:330px;top:0px"><input type="text" value="1." id="lpfC"></div>
 					<div style="position:absolute;left:530px;top:142px"><input type="text" value=".0" id="lpfR"></div>
-					<div style="position:absolute;left:110px;top:28px"><input type="text" value=".2" id="envA"></div>
-					<div style="position:absolute;left:170px;top:28px"><input type="text" value=".4" id="envD"></div>
-					<div style="position:absolute;left:230px;top:0px"><input type="text" value=".0" id="envAm"></div>
+					<div style="position:absolute;left:110px;top:32px"><input type="text" value=".2" id="envA"></div>
+					<div style="position:absolute;left:170px;top:32px"><input type="text" value=".4" id="envD"></div>
+					<div style="position:absolute;left:230px;top:4px"><input type="text" value=".0" id="envAm"></div>
 					<div style="position:absolute;left:170px;top:142px;"><input type="text" value=".25" id="lfoF"></div>
 					<div style="position:absolute;left:230px;top:114px;"><input type="text" value=".0" id="lfoAm"></div>
 					<div style="position:absolute;left:10px;top:114px;"><input type="text" value="2" id="range"></div>
 
-					<svg viewBox="-2 -2 102 32" width="104" height="34" style="position:absolute;left:111px;top:-10px">
+					<svg viewBox="-2 -2 102 32" width="104" height="34" style="position:absolute;left:111px;top:-6px">
 						<path stroke="#FFFFFF" id="envGraph" stroke-width="2" fill="#444444" d="M 0 0"/>
 					</svg>
 					<svg viewBox="-2 -2 102 32" width="104" height="34" style="position:absolute;left:111px;top:104px">
@@ -207,9 +282,9 @@
 				envAm.value=e;
 				lfoF.value=f;
 				lfoAm.value=g;
-				range.value=h;
-				$("#lfoC").val(a/10000.).trigger("change");
-				$("#lfoR").val(b/40.).trigger("change");
+				range.value=(Math.pow(2,Math.floor(h-2.5)));
+				$("#lpfC").val(a/10000.).trigger("change");
+				$("#lpfR").val(b/40.).trigger("change");
 				$("#envA").val(c/1000.).trigger("change");
 				$("#envD").val(d/1000.).trigger("change");
 				$("#envAm").val(e).trigger("change");
